@@ -1,0 +1,54 @@
+# Python artifacts
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.hypothesis/
+htmlcov/
+.coverage
+*.cover
+.tox/
+
+# Virtual environments
+venv/
+.venv/
+env/
+.env/
+
+# Node.js
+node_modules/
+.npm/
+.yarn/
+dist/
+.next/
+
+# Environment files (may contain secrets)
+.env
+.env.local
+.env.*.local
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Hermes runtime data (personal; not part of the repo)
+.hermes/
+
+# MemPalace runtime data
+.mempalace/
+
+# Build outputs
+*.log
+*.pid
