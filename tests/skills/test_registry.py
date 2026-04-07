@@ -69,3 +69,24 @@ class TestSkillRegistry:
         registry.register(GreetSkill())
         assert registry.run("echo", text="test") == "Echo: test"
         assert registry.run("greet", name="Alice") == "Hello, Alice!"
+
+    def test_len(self) -> None:
+        registry = SkillRegistry()
+        assert len(registry) == 0
+        registry.register(EchoSkill())
+        assert len(registry) == 1
+        registry.register(GreetSkill())
+        assert len(registry) == 2
+
+    def test_contains(self) -> None:
+        registry = SkillRegistry()
+        registry.register(EchoSkill())
+        assert "echo" in registry
+        assert "missing" not in registry
+
+    def test_repr(self) -> None:
+        registry = SkillRegistry()
+        assert "SkillRegistry" in repr(registry)
+        assert "skills=0" in repr(registry)
+        registry.register(EchoSkill())
+        assert "skills=1" in repr(registry)

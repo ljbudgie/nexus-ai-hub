@@ -7,6 +7,8 @@ import time
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
+__all__ = ["Memory", "MemPalace"]
+
 
 @dataclass
 class Memory:
@@ -104,7 +106,7 @@ class MemPalace:
             path: File path to write the JSON export.
         """
         data = {k: asdict(v) for k, v in self._memories.items()}
-        Path(path).write_text(json.dumps(data, indent=2))
+        Path(path).write_text(json.dumps(data, indent=2), encoding="utf-8")
 
     def import_json(self, path: str | Path) -> int:
         """Import memories from a JSON file.
@@ -115,9 +117,21 @@ class MemPalace:
         Returns:
             Number of memories imported.
         """
-        data = json.loads(Path(path).read_text())
+        data = json.loads(Path(path).read_text(encoding="utf-8"))
         count = 0
         for key, values in data.items():
             self._memories[key] = Memory(**values)
             count += 1
         return count
+
+    def __len__(self) -> int:
+        """Return the number of stored memories."""
+        return len(self._memories)
+
+    def __contains__(self, key: object) -> bool:
+        """Check whether a memory key exists."""
+        return key in self._memories
+
+    def __repr__(self) -> str:
+        """Return a developer-friendly representation."""
+        return f"MemPalace(memories={len(self._memories)})"
