@@ -155,6 +155,7 @@ git submodule update --remote --merge hermes-agent
 git submodule update --remote --merge mempalace
 git submodule update --remote --merge awesome-openclaw-skills
 git submodule update --remote --merge advocate-companion
+git submodule update --remote --merge burgess-principle
 ```
 
 After updating Hermes or MemPalace, re-run the relevant install step:
@@ -162,4 +163,27 @@ After updating Hermes or MemPalace, re-run the relevant install step:
 ```bash
 cd hermes-agent && pip install -e . --quiet
 cd mempalace    && pip install -e . --quiet
+```
+
+---
+
+## The Burgess Principle — context for AI assistants
+
+The `burgess-principle/` submodule contains the foundational philosophy behind the hub. When dropping the repository into an AI assistant (Grok, Claude, ChatGPT, etc.), the following files provide crucial context:
+
+| File | Purpose |
+|------|---------|
+| `burgess-principle/FOR_AI_MODELS.md` | Read-first guide that helps AI assistants understand the "see the human first" philosophy |
+| `burgess-principle/SOUL.md` | Core beliefs and the SOVEREIGN/NULL verification standard |
+| `burgess-principle/README.md` | Full overview, origin story, and global legal equivalents |
+| `burgess-principle/templates/` | Ready-to-use letter templates for human-review requests |
+| `burgess-principle/case-studies/` | Real-world applications of the principle |
+
+### Using with AI assistants
+
+The burgess-principle README encourages users to "drop the whole folder into any AI assistant" for personalised help. With the submodule included in nexus-ai-hub, cloning with `--recurse-submodules` gives AI assistants access to both the tools (Hermes, MemPalace, skills) and the philosophy in one place.
+
+```bash
+# Clone everything — tools + philosophy
+git clone --recurse-submodules https://github.com/ljbudgie/nexus-ai-hub.git
 ```

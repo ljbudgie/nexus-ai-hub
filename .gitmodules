@@ -10,3 +10,6 @@
 [submodule "advocate-companion"]
 	path = advocate-companion
 	url = https://github.com/ljbudgie/advocate-companion
+[submodule "burgess-principle"]
+	path = burgess-principle
+	url = https://github.com/ljbudgie/burgess-principle
