@@ -1,0 +1,12 @@
+[submodule "mempalace"]
+	path = mempalace
+	url = https://github.com/ljbudgie/mempalace
+[submodule "hermes-agent"]
+	path = hermes-agent
+	url = https://github.com/ljbudgie/hermes-agent
+[submodule "awesome-openclaw-skills"]
+	path = awesome-openclaw-skills
+	url = https://github.com/ljbudgie/awesome-openclaw-skills
+[submodule "advocate-companion"]
+	path = advocate-companion
+	url = https://github.com/ljbudgie/advocate-companion
