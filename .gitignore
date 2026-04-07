@@ -1,54 +1,84 @@
-# Python artifacts
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+*$py.class
+
+# C extensions
 *.so
-*.egg
-*.egg-info/
-dist/
+
+# Distribution / packaging
+.Python
 build/
+develop-eggs/
+dist/
+downloads/
+eggs/
 .eggs/
-.pytest_cache/
-.ruff_cache/
-.mypy_cache/
-.hypothesis/
-htmlcov/
-.coverage
-*.cover
-.tox/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
 
 # Virtual environments
-venv/
 .venv/
+venv/
 env/
-.env/
+ENV/
 
 # Node.js
 node_modules/
 .npm/
 .yarn/
-dist/
 .next/
 
-# Environment files (may contain secrets)
-.env
-.env.local
-.env.*.local
-
-# Editor / IDE
+# IDE / Editor
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
+.project
+.classpath
+.settings/
+
+# Testing
+.tox/
+.nox/
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+.hypothesis/
+.ruff_cache/
+
+# Documentation builds
+docs/_build/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# OS files
 .DS_Store
 Thumbs.db
+
+# Logs
+*.log
+logs/
+*.pid
 
 # Hermes runtime data (personal; not part of the repo)
 .hermes/
 
 # MemPalace runtime data
 .mempalace/
-
-# Build outputs
-*.log
-*.pid

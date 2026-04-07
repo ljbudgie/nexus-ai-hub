@@ -6,13 +6,19 @@
 
 **Hermes Agent · MemPalace · 5,400+ OpenClaw Skills · Advocate Companion**
 
+[![CI](https://github.com/ljbudgie/nexus-ai-hub/actions/workflows/ci.yml/badge.svg)](https://github.com/ljbudgie/nexus-ai-hub/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
+
 </div>
 
 ---
 
 ## What Is This?
 
-**nexus-ai-hub** is a single repository that wires together four complementary AI tools into one cohesive stack:
+**nexus-ai-hub** is a single repository that wires together four complementary AI tools into one cohesive stack.
+
+It ships as **both** a usable Python package (installable with `pip install -e .`) **and** a hub that pins the four upstream projects as git submodules so you can run the full, production-grade versions side-by-side.
 
 | Component | Role | Tech |
 |-----------|------|------|
@@ -21,29 +27,106 @@
 | [**Awesome OpenClaw Skills**](awesome-openclaw-skills/) | Curated catalogue of 5,400+ community skills for OpenClaw / Hermes | Markdown |
 | [**Advocate Companion**](advocate-companion/) | Reasonable Adjustment Companion grounded in The Burgess Principle | React / TypeScript |
 
-Each component lives as a **git submodule** so you always track the upstream source. You can use all four together or pull in only the pieces you need.
+---
+
+## Features
+
+- **Hermes Agent** — A conversational AI agent with multi-turn dialogue, tool
+  orchestration, configurable behaviour, and a self-improving skills loop.
+- **MemPalace** — Persistent memory store with tagging, search, and
+  JSON import/export. Also ships a full palace-structured local memory system
+  with 96.6% LongMemEval recall.
+- **OpenClaw Skills** — A plugin-based skill registry that lets you register,
+  discover, and execute modular capabilities. 5,400+ community skills available.
+- **Advocate Companion** — AI-powered Reasonable Adjustment web UI grounded in
+  The Burgess Principle; works offline and keeps all data in your browser.
 
 ---
 
-## Architecture
+## Project Structure
 
 ```
 nexus-ai-hub/
 |
-+-- hermes-agent/          <- AI agent brain (skills, tools, gateway, multi-platform)
-|   +-- plugins/memory/    <- Pluggable memory backends
++-- src/nexus_ai_hub/          # Python package (install with pip install -e .)
+|   +-- hermes_agent/          # Conversational AI agent
+|   |   +-- __init__.py
+|   |   +-- agent.py
+|   +-- mempalace/             # Long-term memory system
+|   |   +-- __init__.py
+|   |   +-- palace.py
+|   +-- skills/                # Extensible skill/plugin system
+|       +-- __init__.py
+|       +-- registry.py
 |
-+-- mempalace/             <- AI memory layer -- mine + search conversations & projects
-|   +-- mempalace/hermes_provider.py  <- Drop-in Hermes memory plugin
++-- tests/                     # Test suite
++-- docs/                      # Documentation
++-- pyproject.toml             # Project configuration
 |
-+-- awesome-openclaw-skills/  <- 5,400+ curated skills -- install any with clawhub
-|   +-- burgess/           <- Burgess Principle upgrade skills (human-review gate)
-|
-+-- advocate-companion/    <- Web UI -- reasonable-adjustment Co-Pilot + email integration
-    +-- skills/            <- Self-contained advocacy skills (contract review, etc.)
++-- hermes-agent/              # Submodule — full Hermes Agent (Python)
++-- mempalace/                 # Submodule — full MemPalace (Python)
++-- awesome-openclaw-skills/   # Submodule — 5,400+ skill catalogue (Markdown)
++-- advocate-companion/        # Submodule — Reasonable Adjustment UI (React)
++-- setup.sh                   # One-command bootstrap for the full stack
 ```
 
-### How the pieces connect
+---
+
+## Quick Start
+
+### Python package (minimal)
+
+```bash
+git clone https://github.com/ljbudgie/nexus-ai-hub.git
+cd nexus-ai-hub
+pip install -e ".[dev]"
+```
+
+```python
+from nexus_ai_hub.hermes_agent.agent import HermesAgent
+from nexus_ai_hub.mempalace.palace import MemPalace
+from nexus_ai_hub.skills.registry import BaseSkill, SkillMetadata, SkillRegistry
+
+# Start a conversation with Hermes
+agent = HermesAgent()
+response = agent.chat("Hello, Hermes!")
+print(response)
+
+# Store and recall a memory
+palace = MemPalace()
+palace.store("user_preference", "dark mode", tags=["settings"])
+memory = palace.recall("user_preference")
+print(memory.content)  # "dark mode"
+
+# Create and register a custom skill
+class SummariseSkill(BaseSkill):
+    metadata = SkillMetadata(name="summarise", description="Summarise text.")
+
+    def execute(self, **kwargs):
+        text = kwargs.get("text", "")
+        return f"Summary of {len(text)} characters."
+
+registry = SkillRegistry()
+registry.register(SummariseSkill())
+print(registry.run("summarise", text="Some long text here..."))
+```
+
+### Full stack (all four components)
+
+```bash
+# Clone with all submodules
+git clone --recurse-submodules https://github.com/ljbudgie/nexus-ai-hub.git
+cd nexus-ai-hub
+
+# Install everything
+./setup.sh
+```
+
+`setup.sh` installs Hermes Agent (with MemPalace pre-wired), seeds your skill library from the OpenClaw catalogue, and leaves you with the `hermes` CLI ready to use.
+
+---
+
+## Architecture
 
 ```
   +----------------------------------+
@@ -60,67 +143,50 @@ nexus-ai-hub/
   +----------------------------------+
 ```
 
-1. **Hermes Agent** is the agent runtime. It manages conversations, calls tools, and runs skills.
-2. **MemPalace** plugs into Hermes as a memory provider (`hermes_provider.py`). Every session is automatically mined and made searchable — 96.6% recall, entirely local.
-3. **Awesome OpenClaw Skills** is the catalogue you browse to install skills into Hermes (`clawhub install <skill-slug>` or copy to `~/.hermes/skills/`). The `burgess/` sub-folder adds a human-review gate to high-stakes skills.
-4. **Advocate Companion** is a standalone React web app that uses The Burgess Principle to generate legally-grounded reasonable-adjustment messages. Its `skills/` folder contains focused skills (contract review, follow-up threads, etc.) that can also run inside Hermes.
+See [docs/integration.md](docs/integration.md) for a full sequence diagram and per-component wiring guide.
 
 ---
 
-## Quick Start
+## Development
 
-### Prerequisites
-
-- **Python >= 3.11** (Hermes Agent + MemPalace)
-- **Node.js >= 18** (Advocate Companion)
-- **git** with submodule support
-
-### One-command setup
+### Running Tests
 
 ```bash
-# Clone with all submodules
-git clone --recurse-submodules https://github.com/ljbudgie/nexus-ai-hub.git
-cd nexus-ai-hub
-
-# Install everything
-./setup.sh
+pytest
 ```
 
-`setup.sh` installs Hermes Agent (with MemPalace pre-wired), seeds your skill library from the OpenClaw catalogue, and leaves you with the `hermes` CLI ready to use.
+With coverage:
 
-### Manual setup (component by component)
+```bash
+pytest --cov=nexus_ai_hub --cov-report=term-missing
+```
 
-#### 1 — Hermes Agent + MemPalace
+### Linting
+
+```bash
+ruff check src/ tests/
+```
+
+### Type Checking
+
+```bash
+mypy src/
+```
+
+---
+
+## Manual Component Setup
+
+### Hermes Agent + MemPalace
 
 ```bash
 cd hermes-agent
 ./setup-hermes.sh      # installs hermes CLI, all dependencies, seeds skills
 hermes setup           # configure API keys and providers
-```
-
-Enable MemPalace as the memory provider:
-
-```bash
-# Connect MemPalace MCP server to Claude / any MCP client
-claude mcp add mempalace -- python -m mempalace.mcp_server
-
-# Or register it as a Hermes memory plugin
 hermes config set memory_provider mempalace
 ```
 
-Mine your existing conversations and projects into MemPalace:
-
-```bash
-cd mempalace
-pip install mempalace
-mempalace init ~/projects/my-project
-mempalace mine ~/projects/my-project
-mempalace mine ~/chats/ --mode convos
-```
-
-#### 2 — Install OpenClaw Skills into Hermes
-
-Browse the catalogue in [`awesome-openclaw-skills/README.md`](awesome-openclaw-skills/README.md), then install:
+### OpenClaw Skills
 
 ```bash
 # Via ClawHub CLI
@@ -128,108 +194,15 @@ clawhub install <skill-slug>
 
 # Or copy manually
 cp -r awesome-openclaw-skills/<category>/<skill>/ ~/.hermes/skills/
-
-# Enable the Burgess human-review layer for high-stakes skills
-cp -r awesome-openclaw-skills/burgess/<skill>/ ~/.hermes/skills/
 ```
 
-#### 3 — Advocate Companion (web UI)
+### Advocate Companion
 
 ```bash
 cd advocate-companion
 npm install
 npm run dev            # http://localhost:8080
 ```
-
-Set your Gemini API key in `.env` (see `advocate-companion/.env` for the required variables) then open the browser to start generating legally-grounded reasonable-adjustment messages.
-
----
-
-## Components In Detail
-
-### Hermes Agent
-
-The self-improving AI agent built by [Nous Research](https://nousresearch.com). Key features:
-
-- **18 LLM providers** — Anthropic, OpenAI, Gemini, OpenRouter, Nous Portal (400+ models), and more
-- **15 messaging platforms** — Telegram, Discord, Slack, WhatsApp, Signal, Matrix, Email, SMS, and more
-- **Pluggable memory** — swap in MemPalace, Honcho, Mem0, or any custom backend
-- **Skills system** — install from the OpenClaw catalogue or write your own
-- **Runs anywhere** — local, Docker, SSH, Modal (serverless), Daytona
-- **Burgess Principle** — built-in human-impact awareness; flags changes affecting real people before shipping
-
-```bash
-hermes              # start chatting
-hermes model        # choose LLM provider
-hermes skills       # manage skills
-hermes gateway      # start messaging gateway
-```
-
-Full docs: [hermes-agent/README.md](hermes-agent/README.md)
-
----
-
-### MemPalace
-
-The highest-scoring open-source AI memory system on LongMemEval. Key features:
-
-- **96.6% recall** (R@5, zero API calls) — 100% with optional Haiku rerank
-- **Palace structure** — wings -> rooms -> closets -> drawers; +34% retrieval vs flat storage
-- **AAAK compression** — lossless 30x compression; loads months of context in ~170 tokens
-- **Three mining modes** — `projects` (code/docs), `convos` (Claude/ChatGPT/Slack exports), `general` (auto-classifies decisions, preferences, milestones)
-- **Fully local** — ChromaDB on your machine, no cloud calls required
-- **MCP server** — 19 tools for Claude Desktop, Cursor, VS Code, and any MCP client
-- **Hermes plugin** — `hermes_provider.py` registers MemPalace as a Hermes memory backend
-
-```bash
-pip install mempalace
-mempalace init ~/projects/myapp
-mempalace mine ~/chats/ --mode convos
-mempalace search "why did we switch to GraphQL"
-mempalace wake-up > context.txt   # load into local model system prompt
-```
-
-Full docs: [mempalace/README.md](mempalace/README.md)
-
----
-
-### Awesome OpenClaw Skills — Burgess Edition
-
-A curated catalogue of **5,400+ community-built OpenClaw skills**, filtered for quality, safety, and relevance. This fork adds the optional Burgess Principle upgrade layer.
-
-- **5,400+ skills** — Filtered from 13,700+ in the public ClawHub registry (spam, duplicates, malicious entries removed)
-- **Organised by category** — browse [`awesome-openclaw-skills/categories/`](awesome-openclaw-skills/categories/)
-- **Burgess upgrade layer** — skills that touch accessibility, contracts, privacy, or automated decisions get an optional human-review gate; lives in [`burgess/`](awesome-openclaw-skills/burgess/) and is fully opt-in
-
-Install any skill:
-
-```bash
-clawhub install <skill-slug>                              # via ClawHub CLI
-cp -r awesome-openclaw-skills/<path>/ ~/.hermes/skills/   # manual copy
-```
-
-Full catalogue: [awesome-openclaw-skills/README.md](awesome-openclaw-skills/README.md)
-
----
-
-### Advocate Companion
-
-An AI-powered Reasonable Adjustment Companion grounded in [The Burgess Principle](https://github.com/ljbudgie/burgess-principle). Key features:
-
-- **31+ predefined adjustments** — ADHD, anxiety, autism, chronic pain, mobility, and more
-- **21 supported countries** — country-specific legal references (Equality Act 2010, ADA, etc.)
-- **AI Co-Pilot** — context-aware message generation via Google Gemini
-- **Outlook / Hotmail integration** — read incoming emails, draft legally-grounded replies
-- **Privacy-first** — all personal data stays in your browser (LocalStorage only)
-- **Offline mode** — curated Burgess Principle templates always available without an internet connection
-- **PDF export + Response Journal** — full record of every adjustment request you have made
-
-```bash
-cd advocate-companion
-npm install && npm run dev   # http://localhost:8080
-```
-
-Full docs: [advocate-companion/README.md](advocate-companion/README.md)
 
 ---
 
@@ -245,15 +218,27 @@ git submodule update --remote --merge hermes-agent
 
 ---
 
+## Roadmap
+
+- [ ] LLM backend integration for Hermes Agent (Python package)
+- [ ] Vector-based semantic search for MemPalace (Python package)
+- [ ] Built-in skill library (web search, code execution, file I/O, etc.)
+- [ ] CLI interface
+- [ ] REST API server
+- [ ] Conversation persistence and replay
+- [ ] Skill auto-discovery from installed packages
+
+---
+
 ## Contributing
 
-Contributions to nexus-ai-hub (integration layer, setup scripts, documentation) are welcome. For component-level contributions see each submodule's own `CONTRIBUTING.md`.
+Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ---
 
 ## License
 
-- **nexus-ai-hub** (this repository) — MIT
+- **nexus-ai-hub** (this repository) — MIT — see [LICENSE](LICENSE)
 - **Hermes Agent** — MIT ([hermes-agent/LICENSE](hermes-agent/LICENSE))
 - **MemPalace** — MIT ([mempalace/LICENSE](mempalace/LICENSE))
 - **Awesome OpenClaw Skills** — MIT ([awesome-openclaw-skills/LICENSE](awesome-openclaw-skills/LICENSE))
