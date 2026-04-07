@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
+__all__ = ["AgentConfig", "Conversation", "HermesAgent", "Message"]
+
 
 @dataclass
 class AgentConfig:
@@ -41,6 +43,14 @@ class Conversation:
         """Clear conversation history."""
         self.messages.clear()
 
+    def __len__(self) -> int:
+        """Return the number of messages in the conversation."""
+        return len(self.messages)
+
+    def __bool__(self) -> bool:
+        """Return True if there are any messages."""
+        return bool(self.messages)
+
 
 class HermesAgent:
     """The Hermes conversational AI agent.
@@ -76,3 +86,10 @@ class HermesAgent:
     def reset(self) -> None:
         """Reset the conversation state."""
         self.conversation.clear()
+
+    def __repr__(self) -> str:
+        """Return a developer-friendly representation."""
+        return (
+            f"HermesAgent(model={self.config.model!r}, "
+            f"turns={len(self.conversation)})"
+        )

@@ -5,6 +5,8 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 
+__all__ = ["BaseSkill", "SkillMetadata", "SkillRegistry"]
+
 
 @dataclass
 class SkillMetadata:
@@ -109,3 +111,15 @@ class SkillRegistry:
     def list_skills(self) -> list[SkillMetadata]:
         """Return metadata for all registered skills."""
         return [s.metadata for s in self._skills.values()]
+
+    def __len__(self) -> int:
+        """Return the number of registered skills."""
+        return len(self._skills)
+
+    def __contains__(self, name: object) -> bool:
+        """Check whether a skill name is registered."""
+        return name in self._skills
+
+    def __repr__(self) -> str:
+        """Return a developer-friendly representation."""
+        return f"SkillRegistry(skills={len(self._skills)})"

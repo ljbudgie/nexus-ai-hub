@@ -26,6 +26,20 @@ class TestConversation:
         conv.clear()
         assert conv.get_history() == []
 
+    def test_len(self) -> None:
+        conv = Conversation()
+        assert len(conv) == 0
+        conv.add_message("user", "hello")
+        assert len(conv) == 1
+        conv.add_message("assistant", "hi")
+        assert len(conv) == 2
+
+    def test_bool(self) -> None:
+        conv = Conversation()
+        assert not conv
+        conv.add_message("user", "hello")
+        assert conv
+
 
 class TestHermesAgent:
     def test_chat_returns_response(self) -> None:
@@ -51,3 +65,10 @@ class TestHermesAgent:
         agent.chat("hello")
         agent.reset()
         assert agent.conversation.get_history() == []
+
+    def test_repr(self) -> None:
+        agent = HermesAgent()
+        assert "HermesAgent" in repr(agent)
+        assert "default" in repr(agent)
+        agent.chat("hello")
+        assert "turns=2" in repr(agent)

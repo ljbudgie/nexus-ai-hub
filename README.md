@@ -83,9 +83,7 @@ pip install -e ".[dev]"
 ```
 
 ```python
-from nexus_ai_hub.hermes_agent.agent import HermesAgent
-from nexus_ai_hub.mempalace.palace import MemPalace
-from nexus_ai_hub.skills.registry import BaseSkill, SkillMetadata, SkillRegistry
+from nexus_ai_hub import HermesAgent, MemPalace, BaseSkill, SkillMetadata, SkillRegistry
 
 # Start a conversation with Hermes
 agent = HermesAgent()
@@ -102,7 +100,7 @@ print(memory.content)  # "dark mode"
 class SummariseSkill(BaseSkill):
     metadata = SkillMetadata(name="summarise", description="Summarise text.")
 
-    def execute(self, **kwargs):
+    def execute(self, **kwargs: str) -> str:
         text = kwargs.get("text", "")
         return f"Summary of {len(text)} characters."
 

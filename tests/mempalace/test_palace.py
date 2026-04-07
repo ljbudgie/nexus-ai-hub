@@ -88,3 +88,26 @@ class TestMemPalace:
         mem = new_palace.recall("name")
         assert mem is not None
         assert mem.content == "Bob"
+
+    def test_len(self) -> None:
+        palace = MemPalace()
+        assert len(palace) == 0
+        palace.store("a", "1")
+        assert len(palace) == 1
+        palace.store("b", "2")
+        assert len(palace) == 2
+        palace.forget("a")
+        assert len(palace) == 1
+
+    def test_contains(self) -> None:
+        palace = MemPalace()
+        palace.store("name", "Alice")
+        assert "name" in palace
+        assert "missing" not in palace
+
+    def test_repr(self) -> None:
+        palace = MemPalace()
+        assert "MemPalace" in repr(palace)
+        assert "memories=0" in repr(palace)
+        palace.store("a", "1")
+        assert "memories=1" in repr(palace)
