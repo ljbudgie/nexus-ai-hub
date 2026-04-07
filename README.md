@@ -4,7 +4,7 @@
 
 ### The ultimate AI helper hub
 
-**Hermes Agent · MemPalace · 5,400+ OpenClaw Skills · Advocate Companion**
+**Hermes Agent · MemPalace · 5,400+ OpenClaw Skills · Advocate Companion · The Burgess Principle**
 
 [![CI](https://github.com/ljbudgie/nexus-ai-hub/actions/workflows/ci.yml/badge.svg)](https://github.com/ljbudgie/nexus-ai-hub/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -16,9 +16,9 @@
 
 ## What Is This?
 
-**nexus-ai-hub** is a single repository that wires together four complementary AI tools into one cohesive stack.
+**nexus-ai-hub** is a single repository that wires together five complementary AI tools into one cohesive stack.
 
-It ships as **both** a usable Python package (installable with `pip install -e .`) **and** a hub that pins the four upstream projects as git submodules so you can run the full, production-grade versions side-by-side.
+It ships as **both** a usable Python package (installable with `pip install -e .`) **and** a hub that pins the five upstream projects as git submodules so you can run the full, production-grade versions side-by-side.
 
 | Component | Role | Tech |
 |-----------|------|------|
@@ -26,6 +26,7 @@ It ships as **both** a usable Python package (installable with `pip install -e .
 | [**MemPalace**](mempalace/) | Highest-scoring AI memory system — local, lossless, 96.6% recall | Python |
 | [**Awesome OpenClaw Skills**](awesome-openclaw-skills/) | Curated catalogue of 5,400+ community skills for OpenClaw / Hermes | Markdown |
 | [**Advocate Companion**](advocate-companion/) | Reasonable Adjustment Companion grounded in The Burgess Principle | React / TypeScript |
+| [**The Burgess Principle**](burgess-principle/) | "Was a human able to review my case?" — the philosophy and framework behind the hub | Markdown |
 
 ---
 
@@ -40,6 +41,10 @@ It ships as **both** a usable Python package (installable with `pip install -e .
   discover, and execute modular capabilities. 5,400+ community skills available.
 - **Advocate Companion** — AI-powered Reasonable Adjustment web UI grounded in
   The Burgess Principle; works offline and keeps all data in your browser.
+- **The Burgess Principle** — The foundational framework that underpins the
+  project. Includes templates, case studies, and key documents like `SOUL.md`
+  and `FOR_AI_MODELS.md` that help AI assistants understand the "see the human
+  first" philosophy.
 
 ---
 
@@ -67,6 +72,7 @@ nexus-ai-hub/
 +-- mempalace/                 # Submodule — full MemPalace (Python)
 +-- awesome-openclaw-skills/   # Submodule — 5,400+ skill catalogue (Markdown)
 +-- advocate-companion/        # Submodule — Reasonable Adjustment UI (React)
++-- burgess-principle/         # Submodule — The Burgess Principle framework
 +-- setup.sh                   # One-command bootstrap for the full stack
 ```
 
@@ -138,6 +144,12 @@ cd nexus-ai-hub
   +----------------------------------+
   |      Advocate Companion          |  <- web UI for self-advocacy
   |  React . Supabase . Gemini AI    |
+  +----------------------------------+
+
+  +----------------------------------+
+  |      The Burgess Principle       |  <- foundational philosophy & framework
+  |  SOUL.md . FOR_AI_MODELS.md      |
+  |  templates/ . case-studies/      |
   +----------------------------------+
 ```
 
@@ -241,6 +253,7 @@ Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for gui
 - **MemPalace** — MIT ([mempalace/LICENSE](mempalace/LICENSE))
 - **Awesome OpenClaw Skills** — MIT ([awesome-openclaw-skills/LICENSE](awesome-openclaw-skills/LICENSE))
 - **Advocate Companion** — MIT with additional terms for *The Burgess Principle* content ([advocate-companion/LICENSE](advocate-companion/LICENSE))
+- **The Burgess Principle** — MIT (doctrine); certification mark for commercial standard ([burgess-principle/LICENSE.md](burgess-principle/LICENSE.md))
 
 ---
 
