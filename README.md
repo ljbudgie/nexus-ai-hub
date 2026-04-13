@@ -115,7 +115,7 @@ registry.register(SummariseSkill())
 print(registry.run("summarise", text="Some long text here..."))
 ```
 
-### Full stack (all four components)
+### Full stack (all five components)
 
 ```bash
 # Clone with all submodules
@@ -133,23 +133,26 @@ cd nexus-ai-hub
 ## Architecture
 
 ```
+  +==================================+
+  |      The Burgess Principle       |  <- foundational philosophy & framework
+  |  SOUL.md . FOR_AI_MODELS.md      |
+  |  templates/ . case-studies/      |
+  +==================================+
+                  |
+                  v  "see the human first"
+                  |
   +----------------------------------+
   |         Hermes Agent             |  <- one command to start: hermes
   |  +---------+  +---------------+  |
   |  |MemPalace|  |OpenClaw Skills|  |  <- memory + 5,400 skills
   |  +---------+  +---------------+  |
   +---------------+------------------+
-                  | Burgess Principle
-                  v
+                  |
+                  v  Burgess-wrapped skills
+                  |
   +----------------------------------+
   |      Advocate Companion          |  <- web UI for self-advocacy
   |  React . Supabase . Gemini AI    |
-  +----------------------------------+
-
-  +----------------------------------+
-  |      The Burgess Principle       |  <- foundational philosophy & framework
-  |  SOUL.md . FOR_AI_MODELS.md      |
-  |  templates/ . case-studies/      |
   +----------------------------------+
 ```
 

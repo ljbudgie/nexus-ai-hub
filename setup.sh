@@ -43,7 +43,7 @@ echo ""
 # Verify submodules are populated
 # =============================================================================
 
-for mod in hermes-agent mempalace awesome-openclaw-skills advocate-companion; do
+for mod in hermes-agent mempalace awesome-openclaw-skills advocate-companion burgess-principle; do
     if [ ! -f "$SCRIPT_DIR/$mod/.git" ] && [ ! -d "$SCRIPT_DIR/$mod/.git" ]; then
         # Submodule directory exists but may not be initialised yet
         if [ -z "$(ls -A "$SCRIPT_DIR/$mod" 2>/dev/null)" ]; then
