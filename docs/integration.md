@@ -1,6 +1,6 @@
 # Integration Guide
 
-This page explains how the four components of nexus-ai-hub interact with each other and how to get the most out of running them together.
+This page explains how the five components of nexus-ai-hub interact with each other and how to get the most out of running them together.
 
 ---
 
