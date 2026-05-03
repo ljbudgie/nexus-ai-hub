@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 import time
 from collections.abc import Mapping
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, is_dataclass
 from pathlib import Path
 from typing import Any
 
@@ -80,7 +80,7 @@ class MemPalace:
         if isinstance(content, str):
             return content
         serialisable: Any
-        if hasattr(content, "__dataclass_fields__"):
+        if is_dataclass(content) and not isinstance(content, type):
             serialisable = asdict(content)
         elif isinstance(content, Mapping):
             serialisable = dict(content)
