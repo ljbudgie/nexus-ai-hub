@@ -45,7 +45,7 @@ class MemPalace:
         Args:
             key: Unique identifier for the memory.
             content: The content to remember.
-            tags: Optional tags for categorisation.
+            tags: Optional tags for categorization.
 
         Returns:
             The stored Memory object.
@@ -73,20 +73,20 @@ class MemPalace:
             The stored Memory object.
         """
         sensory_tags = ["sensory", *(tags or [])]
-        return self.store(key, self._serialise_content(content), tags=sensory_tags)
+        return self.store(key, self._serialize_content(content), tags=sensory_tags)
 
-    def _serialise_content(self, content: object) -> str:
+    def _serialize_content(self, content: object) -> str:
         """Return memory content as a string."""
         if isinstance(content, str):
             return content
-        serialisable: Any
+        serializable: Any
         if is_dataclass(content) and not isinstance(content, type):
-            serialisable = asdict(content)
+            serializable = asdict(content)
         elif isinstance(content, Mapping):
-            serialisable = dict(content)
+            serializable = dict(content)
         else:
-            serialisable = content
-        return json.dumps(serialisable, sort_keys=True, default=str)
+            serializable = content
+        return json.dumps(serializable, sort_keys=True, default=str)
 
     def recall(self, key: str) -> Memory | None:
         """Retrieve a memory by key.
