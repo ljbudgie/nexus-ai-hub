@@ -15,6 +15,15 @@ class EchoSkill(BaseSkill):
         return f"Echo: {text}"
 
 
+class AlternateEchoSkill(BaseSkill):
+    """A skill with a duplicate name used to verify duplicate registration behavior."""
+
+    metadata = SkillMetadata(name="echo", description="Alternate echo.")
+
+    def execute(self, **kwargs: str) -> str:
+        return "Alternate"
+
+
 class GreetSkill(BaseSkill):
     """A test skill that greets a user."""
 
@@ -37,6 +46,15 @@ class UpperSkill(BaseSkill):
 
     def execute(self, **kwargs: str) -> str:
         return kwargs.get("text", "").upper()
+
+
+class PairSkill(BaseSkill):
+    """A test skill that combines two arguments."""
+
+    metadata = SkillMetadata(name="pair", description="Join two values.")
+
+    def execute(self, **kwargs: str) -> str:
+        return f"{kwargs.get('left', '')}:{kwargs.get('right', '')}"
 
 
 class TestSkillMetadata:
@@ -108,6 +126,15 @@ class TestSkillRegistry:
         with pytest.raises(ValueError, match="already registered"):
             registry.register(EchoSkill())
 
+    def test_duplicate_registration_keeps_original_skill(self) -> None:
+        registry = SkillRegistry()
+        registry.register(EchoSkill())
+        with pytest.raises(ValueError, match="already registered"):
+            registry.register(AlternateEchoSkill())
+
+        assert registry.run("echo", text="kept") == "Echo: kept"
+        assert len(registry) == 1
+
     def test_run_missing_skill_raises(self) -> None:
         registry = SkillRegistry()
         with pytest.raises(KeyError, match="not found"):
@@ -132,6 +159,14 @@ class TestSkillRegistry:
         names = [s.name for s in skills]
         assert "echo" in names
         assert "greet" in names
+
+    def test_list_skills_preserves_registration_order(self) -> None:
+        registry = SkillRegistry()
+        registry.register(GreetSkill())
+        registry.register(EchoSkill())
+        registry.register(UpperSkill())
+
+        assert [skill.name for skill in registry.list_skills()] == ["greet", "echo", "upper"]
 
     def test_multiple_skills_run_independently(self) -> None:
         registry = SkillRegistry()
@@ -187,6 +222,12 @@ class TestSkillRegistry:
         registry.register(EchoSkill())
         result = registry.run("echo")
         assert result == "Echo: "
+
+    def test_run_forwards_multiple_keyword_arguments(self) -> None:
+        registry = SkillRegistry()
+        registry.register(PairSkill())
+
+        assert registry.run("pair", left="alpha", right="omega") == "alpha:omega"
 
     def test_run_returns_correct_type(self) -> None:
         registry = SkillRegistry()

@@ -3,6 +3,8 @@
 import json
 from pathlib import Path
 
+import pytest
+
 from nexus_ai_hub.mempalace.palace import Memory, MemPalace
 
 
@@ -150,15 +152,18 @@ class TestMemPalace:
         assert mem.content == "v"
         assert mem.tags == ["t"]
 
-    def test_update_preserves_created_at(self) -> None:
+    def test_update_preserves_created_at(self, monkeypatch: pytest.MonkeyPatch) -> None:
         """Updating a memory should keep created_at but update updated_at."""
+        times = iter([100.0, 200.0])
+        monkeypatch.setattr("nexus_ai_hub.mempalace.palace.time.time", lambda: next(times))
         palace = MemPalace()
         mem1 = palace.store("k", "old")
         created = mem1.created_at
+        first_updated = mem1.updated_at
         # Store again to trigger update
         mem2 = palace.store("k", "new")
         assert mem2.created_at == created
-        assert mem2.updated_at >= mem1.updated_at
+        assert mem2.updated_at > first_updated
 
     def test_update_without_tags_preserves_tags(self) -> None:
         """Updating without specifying tags should preserve existing tags."""
@@ -177,6 +182,15 @@ class TestMemPalace:
         mem = palace.recall("k")
         assert mem is not None
         assert mem.tags == ["new"]
+
+    def test_update_with_empty_tags_clears_tags(self) -> None:
+        """Updating with an explicit empty tag list should clear existing tags."""
+        palace = MemPalace()
+        palace.store("k", "v", tags=["old"])
+        palace.store("k", "v2", tags=[])
+        mem = palace.recall("k")
+        assert mem is not None
+        assert mem.tags == []
 
     def test_search_by_tag_no_matches(self) -> None:
         palace = MemPalace()
@@ -245,6 +259,22 @@ class TestMemPalace:
         assert mem is not None
         assert mem.created_at == stored.created_at
         assert mem.updated_at == stored.updated_at
+
+    def test_import_overwrites_existing_matching_key(self, tmp_path: Path) -> None:
+        palace = MemPalace()
+        palace.store("k", "imported", tags=["new"])
+        path = tmp_path / "overwrite.json"
+        palace.export_json(path)
+
+        existing = MemPalace()
+        existing.store("k", "existing", tags=["old"])
+        count = existing.import_json(path)
+        mem = existing.recall("k")
+
+        assert count == 1
+        assert mem is not None
+        assert mem.content == "imported"
+        assert mem.tags == ["new"]
 
     def test_export_json_with_string_path(self, tmp_path: Path) -> None:
         palace = MemPalace()
