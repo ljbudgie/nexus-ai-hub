@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import json
 import time
+from collections.abc import Mapping
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
+from typing import Any
 
 __all__ = ["Memory", "MemPalace"]
 
@@ -58,6 +60,33 @@ class MemPalace:
             mem = Memory(key=key, content=content, tags=tags or [], created_at=now, updated_at=now)
             self._memories[key] = mem
         return mem
+
+    def store_sensory(self, key: str, content: object, tags: list[str] | None = None) -> Memory:
+        """Store sensory profile data with a sensory tag.
+
+        Args:
+            key: Unique identifier for the sensory memory.
+            content: The sensory profile or event to remember.
+            tags: Optional tags for categorisation.
+
+        Returns:
+            The stored Memory object.
+        """
+        sensory_tags = ["sensory", *(tags or [])]
+        return self.store(key, self._serialise_content(content), tags=sensory_tags)
+
+    def _serialise_content(self, content: object) -> str:
+        """Return memory content as a string."""
+        if isinstance(content, str):
+            return content
+        serialisable: Any
+        if hasattr(content, "__dataclass_fields__"):
+            serialisable = asdict(content)
+        elif isinstance(content, Mapping):
+            serialisable = dict(content)
+        else:
+            serialisable = content
+        return json.dumps(serialisable, sort_keys=True, default=str)
 
     def recall(self, key: str) -> Memory | None:
         """Retrieve a memory by key.
