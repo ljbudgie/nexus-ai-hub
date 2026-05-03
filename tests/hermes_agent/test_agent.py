@@ -105,6 +105,17 @@ class TestConversation:
         assert h1 == h2
         assert h1 is not h2
 
+    def test_history_entries_are_copies(self) -> None:
+        """Mutating returned history dictionaries should not mutate stored messages."""
+        conv = Conversation()
+        conv.add_message("user", "hello")
+        history = conv.get_history()
+        history[0]["content"] = "changed"
+        history[0]["role"] = "assistant"
+
+        assert conv.messages[0] == Message(role="user", content="hello")
+        assert conv.get_history() == [{"role": "user", "content": "hello"}]
+
     def test_messages_field_default_factory(self) -> None:
         """Ensure each Conversation instance gets its own messages list."""
         conv1 = Conversation()
@@ -142,6 +153,11 @@ class TestHermesAgent:
         agent = HermesAgent(config=config)
         assert agent.config.model == "gpt-4"
         assert agent.config.max_turns == 5
+
+    def test_custom_config_instance_is_reused(self) -> None:
+        config = AgentConfig(model="gpt-4", max_turns=5)
+        agent = HermesAgent(config=config)
+        assert agent.config is config
 
     def test_conversation_history_grows(self) -> None:
         agent = HermesAgent()
@@ -193,6 +209,12 @@ class TestHermesAgent:
         response = agent.chat("")
         assert response == "[Hermes] Received: "
         assert len(agent.conversation) == 2
+
+    def test_chat_preserves_surrounding_whitespace(self) -> None:
+        agent = HermesAgent()
+        response = agent.chat("  padded input  ")
+        assert response == "[Hermes] Received:   padded input  "
+        assert agent.conversation.get_history()[0]["content"] == "  padded input  "
 
     def test_reset_then_chat(self) -> None:
         agent = HermesAgent()

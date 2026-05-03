@@ -52,7 +52,7 @@ class MemPalace:
         if key in self._memories:
             mem = self._memories[key]
             mem.content = content
-            mem.tags = tags or mem.tags
+            mem.tags = tags if tags is not None else mem.tags
             mem.updated_at = now
         else:
             mem = Memory(key=key, content=content, tags=tags or [], created_at=now, updated_at=now)
