@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import json
 import time
-from dataclasses import asdict, dataclass, field
+from collections.abc import Mapping
+from dataclasses import asdict, dataclass, field, is_dataclass
 from pathlib import Path
+from typing import Any
 
 __all__ = ["Memory", "MemPalace"]
 
@@ -43,7 +45,7 @@ class MemPalace:
         Args:
             key: Unique identifier for the memory.
             content: The content to remember.
-            tags: Optional tags for categorisation.
+            tags: Optional tags for categorization.
 
         Returns:
             The stored Memory object.
@@ -58,6 +60,33 @@ class MemPalace:
             mem = Memory(key=key, content=content, tags=tags or [], created_at=now, updated_at=now)
             self._memories[key] = mem
         return mem
+
+    def store_sensory(self, key: str, content: object, tags: list[str] | None = None) -> Memory:
+        """Store sensory profile data with a sensory tag.
+
+        Args:
+            key: Unique identifier for the sensory memory.
+            content: The sensory profile or event to remember.
+            tags: Optional tags for categorization.
+
+        Returns:
+            The stored Memory object.
+        """
+        sensory_tags = ["sensory", *(tags or [])]
+        return self.store(key, self._serialize_content(content), tags=sensory_tags)
+
+    def _serialize_content(self, content: object) -> str:
+        """Return memory content as a string."""
+        if isinstance(content, str):
+            return content
+        data: Any
+        if is_dataclass(content) and not isinstance(content, type):
+            data = asdict(content)
+        elif isinstance(content, Mapping):
+            data = dict(content)
+        else:
+            data = content
+        return json.dumps(data, sort_keys=True, default=str)
 
     def recall(self, key: str) -> Memory | None:
         """Retrieve a memory by key.

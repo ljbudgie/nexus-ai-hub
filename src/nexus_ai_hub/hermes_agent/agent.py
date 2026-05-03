@@ -68,18 +68,21 @@ class HermesAgent:
         self.config = config or AgentConfig()
         self.conversation = Conversation()
 
-    def chat(self, user_input: str) -> str:
+    def chat(self, user_input: str, context: object | None = None) -> str:
         """Process user input and return a response.
 
         Args:
             user_input: The user's message.
+            context: Optional ecosystem context for the response.
 
         Returns:
             The agent's response string.
         """
         self.conversation.add_message("user", user_input)
         # Placeholder — integrate with an LLM backend
-        response = f"[Hermes] Received: {user_input}"
+        response = f"[Hermes] Received: {user_input}" + (
+            f" | Context: {context!r}" if context is not None else ""
+        )
         self.conversation.add_message("assistant", response)
         return response
 
