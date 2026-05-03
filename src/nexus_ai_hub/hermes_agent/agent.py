@@ -80,9 +80,9 @@ class HermesAgent:
         """
         self.conversation.add_message("user", user_input)
         # Placeholder — integrate with an LLM backend
-        response = f"[Hermes] Received: {user_input}"
-        if context is not None:
-            response = f"{response} | Context: {context!r}"
+        response = f"[Hermes] Received: {user_input}" + (
+            f" | Context: {context!r}" if context is not None else ""
+        )
         self.conversation.add_message("assistant", response)
         return response
 

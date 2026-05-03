@@ -79,14 +79,14 @@ class MemPalace:
         """Return memory content as a string."""
         if isinstance(content, str):
             return content
-        serializable: Any
+        data: Any
         if is_dataclass(content) and not isinstance(content, type):
-            serializable = asdict(content)
+            data = asdict(content)
         elif isinstance(content, Mapping):
-            serializable = dict(content)
+            data = dict(content)
         else:
-            serializable = content
-        return json.dumps(serializable, sort_keys=True, default=str)
+            data = content
+        return json.dumps(data, sort_keys=True, default=str)
 
     def recall(self, key: str) -> Memory | None:
         """Retrieve a memory by key.
