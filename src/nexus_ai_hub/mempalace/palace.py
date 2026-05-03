@@ -67,7 +67,7 @@ class MemPalace:
         Args:
             key: Unique identifier for the sensory memory.
             content: The sensory profile or event to remember.
-            tags: Optional tags for categorisation.
+            tags: Optional tags for categorization.
 
         Returns:
             The stored Memory object.
