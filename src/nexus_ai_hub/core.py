@@ -135,6 +135,5 @@ class NexusHub:
             f"mempalace={self.mempalace!r}, "
             "mirror=MirrorIntegration(), "
             "burgess=BurgessIntegration(), "
-            "openhear=OpenHearIntegration()"
-            ")"
+            "openhear=OpenHearIntegration())"
         )
