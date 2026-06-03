@@ -37,15 +37,27 @@ class TestPublicAPI:
         assert nexus_ai_hub.NexusHub is not None
         assert nexus_ai_hub.BurgessContext is not None
 
+    def test_burgess_exports(self) -> None:
+        assert nexus_ai_hub.BurgessGate is not None
+        assert nexus_ai_hub.BurgessLedger is not None
+        assert nexus_ai_hub.LedgerRecord is not None
+        assert nexus_ai_hub.Decision is not None
+        assert nexus_ai_hub.BurgessBlockedError is not None
+
     def test_all_attribute(self) -> None:
         expected = {
             "AgentConfig",
             "BaseSkill",
+            "BurgessBlockedError",
             "BurgessContext",
+            "BurgessGate",
             "BurgessIntegration",
+            "BurgessLedger",
             "Conversation",
+            "Decision",
             "HermesAgent",
             "HapticProfile",
+            "LedgerRecord",
             "Memory",
             "MemPalace",
             "Message",

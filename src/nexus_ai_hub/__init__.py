@@ -1,5 +1,12 @@
 """Nexus AI Hub — The ultimate AI helper hub."""
 
+from nexus_ai_hub.burgess.gate import (
+    BurgessBlockedError,
+    BurgessGate,
+    BurgessLedger,
+    Decision,
+    LedgerRecord,
+)
 from nexus_ai_hub.core import (
     BurgessContext,
     BurgessIntegration,
@@ -18,11 +25,16 @@ __version__ = "0.1.0"
 __all__ = [
     "AgentConfig",
     "BaseSkill",
+    "BurgessBlockedError",
     "BurgessContext",
+    "BurgessGate",
     "BurgessIntegration",
+    "BurgessLedger",
     "Conversation",
+    "Decision",
     "HermesAgent",
     "HapticProfile",
+    "LedgerRecord",
     "Memory",
     "MemPalace",
     "Message",

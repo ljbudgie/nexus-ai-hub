@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
+from nexus_ai_hub.burgess.gate import BurgessGate, LedgerRecord
 from nexus_ai_hub.hermes_agent.agent import HermesAgent
 from nexus_ai_hub.mempalace.palace import MemPalace
 
@@ -120,12 +121,44 @@ class NexusHub:
         mirror: MirrorIntegration | None = None,
         burgess: BurgessIntegration | None = None,
         openhear: OpenHearIntegration | None = None,
+        gate: BurgessGate | None = None,
     ) -> None:
         self.agent = agent or HermesAgent()
         self.mempalace = mempalace or MemPalace()
         self.mirror = mirror or MirrorIntegration()
         self.burgess = burgess or BurgessIntegration()
         self.openhear = openhear or OpenHearIntegration()
+        self.gate = gate or BurgessGate()
+
+    def review(self, action: str, context: BurgessContext) -> LedgerRecord:
+        """Run the Burgess gate over an action and record the decision.
+
+        Args:
+            action: A short description of the action being attempted.
+            context: The case-specific Burgess context.
+
+        Returns:
+            The appended ledger record. A NULL decision means the action is
+            blocked until :meth:`approve` records a human reviewer.
+        """
+        return self.gate.evaluate(action, context)
+
+    def approve(self, record: LedgerRecord, approver: str, note: str = "") -> LedgerRecord:
+        """Record a human review that releases a blocked (NULL) action.
+
+        Args:
+            record: The check record returned by :meth:`review`.
+            approver: A stable identifier for the human who reviewed the facts.
+            note: Optional rationale for the approval.
+
+        Returns:
+            The appended human-approval record.
+        """
+        return self.gate.require_human(record, approver, note)
+
+    def is_allowed(self, record: LedgerRecord) -> bool:
+        """Return True if a reviewed action may proceed."""
+        return self.gate.is_allowed(record)
 
     def __repr__(self) -> str:
         """Return a developer-friendly representation."""
@@ -135,5 +168,6 @@ class NexusHub:
             f"mempalace={self.mempalace!r}, "
             "mirror=MirrorIntegration(), "
             "burgess=BurgessIntegration(), "
-            "openhear=OpenHearIntegration())"
+            "openhear=OpenHearIntegration(), "
+            f"gate={self.gate!r})"
         )
