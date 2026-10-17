@@ -34,6 +34,9 @@ dev = [
     "mypy>=1.0",
 ]
 
+[project.scripts]
+nexus = "nexus_ai_hub.cli:main"
+
 [project.urls]
 Homepage = "https://github.com/ljbudgie/nexus-ai-hub"
 Repository = "https://github.com/ljbudgie/nexus-ai-hub"

@@ -17,7 +17,9 @@ from nexus_ai_hub.core import (
     OpenHearIntegration,
 )
 from nexus_ai_hub.hermes_agent.agent import AgentConfig, Conversation, HermesAgent, Message
+from nexus_ai_hub.iris import IrisCompanion
 from nexus_ai_hub.mempalace.palace import Memory, MemPalace
+from nexus_ai_hub.server import serve_openhear
 from nexus_ai_hub.skills.registry import BaseSkill, SkillMetadata, SkillRegistry
 
 __version__ = "0.1.0"
@@ -34,6 +36,7 @@ __all__ = [
     "Decision",
     "HermesAgent",
     "HapticProfile",
+    "IrisCompanion",
     "LedgerRecord",
     "Memory",
     "MemPalace",
@@ -44,5 +47,6 @@ __all__ = [
     "OpenHearIntegration",
     "SkillMetadata",
     "SkillRegistry",
+    "serve_openhear",
     "__version__",
 ]
