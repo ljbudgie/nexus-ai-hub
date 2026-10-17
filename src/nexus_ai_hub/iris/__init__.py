@@ -65,7 +65,8 @@ class IrisCompanion:
             haptic_ready = True
             requires_human = False
         else:
-            message = f"{event_type.replace('_', ' ').title()} requires human review before any action."
+            title = event_type.replace("_", " ").title()
+            message = f"{title} requires human review before any action."
             haptic_ready = False
             requires_human = True
 

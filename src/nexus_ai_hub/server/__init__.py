@@ -12,7 +12,7 @@ from __future__ import annotations
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from typing import TYPE_CHECKING, Any
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import urlparse
 
 if TYPE_CHECKING:
     from nexus_ai_hub.core import NexusHub
@@ -81,7 +81,11 @@ class OpenHearHandler(BaseHTTPRequestHandler):
 
             response: dict[str, Any] = {
                 "action": action,
-                "decision": record.decision.value if hasattr(record.decision, "value") else str(record.decision),
+                "decision": (
+                    record.decision.value
+                    if hasattr(record.decision, "value")
+                    else str(record.decision)
+                ),
                 "allowed": self.hub.is_allowed(record),
                 "rationale": record.rationale,
                 "ledger_index": record.index,
