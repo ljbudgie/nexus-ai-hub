@@ -57,6 +57,7 @@ class TestPublicAPI:
             "Decision",
             "HermesAgent",
             "HapticProfile",
+            "IrisCompanion",
             "LedgerRecord",
             "Memory",
             "MemPalace",
@@ -67,6 +68,7 @@ class TestPublicAPI:
             "OpenHearIntegration",
             "SkillMetadata",
             "SkillRegistry",
+            "serve_openhear",
             "__version__",
         }
         assert expected == set(nexus_ai_hub.__all__)
